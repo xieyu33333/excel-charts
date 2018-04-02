@@ -30,39 +30,42 @@
         </div>
 
         <div class="filter">
-            <p class="title">选择图表类型</p>
-            <select id="filter-charttype">
-                <option value="pie">饼状图</option>
-                <option value="pie">柱状图</option>
-                <option value="pie">折线图</option>
-            </select>
-            <p class="title">选择一个值作为key</p>
-            <select id="filter-key"></select>
-            <p class="title">选择一个值作为value</p>
-            <select id="filter-value"></select>
-            <p class="title">选择哪些进行对比</p>
-            <div id="filter-name"></div>
+            <table class="table">
+                <tr>
+                    <th>图表类型</th>
+                    <th>选择key</th>
+                    <th>选择value</th>
+                </tr>
+
+                <tr>
+                   <td>
+                        <select id="filter-charttype">
+                            <option value="pie">饼状图</option>
+                            <!-- <option value="bar">柱状图</option> -->
+                            <!-- <option value="line">折线图</option> -->
+                        </select>
+                    </td>
+                   <td>
+                        <select id="filter-key"></select>
+                   </td>
+                   <td>
+                        <select id="filter-value"></select>
+                   </td>
+                </tr>
+            </table>
+
+            <p class="title">选择哪些项目进行对比</p>
+            <select id="filter-name" name="states[]" multiple="multiple" style="height: 0px;"></select>
+
+            <button class="btn" style="margin: 20px auto;" id="handleChart">生成图表</button>
         </div>
 
-        <button class="btn" id="handleChart">生成图表</button>
     </section>
 
 
     <section class="show">
         <div id="excel-view"></div>
     </section>
-
-    
-
-    <!-- <section class="export">
-        <p class="title">自定义 Excel 数据</p>
-        <div class="edit-view">
-            <textarea name="edit" id="edit"></textarea>
-            <div id='view' class="markdown-body"></div>
-        </div>
-        <p class="title">生成 Excel 文件</p>
-        <button id="derive">导出</button>
-    </section> -->
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.full.min.js" async></script>
     <script src="https://cdn.bootcss.com/FileSaver.js/1.3.3/FileSaver.min.js" async></script>

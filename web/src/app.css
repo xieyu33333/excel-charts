@@ -33,6 +33,7 @@ a {
 .main .ctrl {
 	flex: 1;
 	overflow-y: auto;
+	background-color: rgba(51,170,255,0.8);
 }
 
 .main .show {
@@ -40,13 +41,11 @@ a {
 }
 
 .import, .filter {
-	background-color: rgba(51,170,255,0.8);
 	padding: 8px 20px;
 	text-align: center
 }
 
 .export {
-	background-color: rgba(136,205,51,0.8);
 	padding: 8px 12px;
 	text-align: center
 }
@@ -57,13 +56,34 @@ section .title {
 	text-shadow: 0 1px 6px rgba(1,1,1,0.36)
 }
 
+.btn {
+	color: white;
+	background: green;
+	border-radius: 4px;
+	height: 34px;
+	font-size: 16px;
+	padding: 4px 20px;
+	outline: none;
+}
+
+.table {
+	width: 100%;
+}
+
+.table th {
+	font-size: 16px;
+	color: #fff;
+	text-shadow: 0 1px 6px rgba(1,1,1,0.36);
+	font-weight: 400;
+}
+
 #drop {
 	margin: 0 auto;
 	border: 2px dashed #fff;
-	height: 120px;
-	width: 360px;
+	height: 80px;
+	width: 80%;
 	text-align: center;
-	line-height: 120px;
+	line-height: 80px;
 	color: #fff;
 	-webkit-transition: all .15s ease-in-out;
 	transition: all .15s ease-in-out
@@ -75,8 +95,8 @@ section .title {
 }
 
 #import-file {
-	width: 360px;
-	height: 120px;
+	width: 80%;
+	height: 80px;
 	border: 2px dashed #fff;
 	margin: 0 auto;
 	display: block;
@@ -84,7 +104,7 @@ section .title {
 	font-size: 26px;
 	color: #fff;
 	text-align: center;
-	line-height: 120px;
+	line-height: 80px;
 	-webkit-transition: all .15s ease-in-out;
 	transition: all .15s ease-in-out
 }

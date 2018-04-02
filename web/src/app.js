@@ -1,26 +1,22 @@
 
 window.onload = function () {
 
-    // var $ = function (select, ctx) {
-    //     ctx = ctx || document;
-    //     return ctx.querySelector(select);
-    // };
-
     var file = $('#file')[0];
-    var drop = $('#drop')[0];
-    var edit = $('#edit')[0];
+    var $drop = $('#drop');
     var view = $('#view')[0];
     var derive = $('#derive')[0];
-    var $keySelect = $('#filter-key')[0];
-    var $valueSelect = $('#filter-value')[0];
-    var $nameSelect = $('#filter-name')[0];
-    var $handleChart = $('#handleChart')[0];
+    var $keySelect = $('#filter-key');
+    var $valueSelect = $('#filter-value');
+    var $nameSelect = $('#filter-name');
+    var $handleChart = $('#handleChart');
+    var $chartType = $('#filter-charttype');
 
     var excelView = $('#excel-view')[0];
     var chart = echarts.init(excelView);
     var chooseKey;
     var chooseValue;
     var gdata;
+    var chartType = 'pie';
     var products = [];
 
 
@@ -87,16 +83,32 @@ window.onload = function () {
             var o = {};
             o.value = i[chooseValue];
             o.name = i[chooseKey];
-            result.push(o);
+            if (products.indexOf(o.name) > -1) {
+                result.push(o);
+            }
         });
         var option = {
             series : [
                 {
                     name: '访问来源',
-                    type: 'pie',
+                    type: chartType,
                     radius: '55%',
-                    data: result
+                    data: result,
+                    // 高亮样式。
+                    emphasis: {
+                        itemStyle: {
+                        },
+                        textStyle: {
+                           fontSize: 20 // 用 legend.textStyle.fontSize 更改示例大小
+                        },
+                        label: {
+                            show: true,
+                            fontSize: 20,
+                            formatter: '{b}\n{c}\n ({d}%)'
+                        }
+                    }
                 }
+
             ]
         };
 
@@ -105,23 +117,26 @@ window.onload = function () {
     };
 
     var initFilter = function(data) {
-        var str = '<option"></option>';
+        var str = '<option></option>';
         for (var i in data[0]) {
             str += `<option value="${i}">${i}</option>`;
         }
-        $keySelect.innerHTML = str;
-        $valueSelect.innerHTML = str;       
+        $keySelect.html(str);
+        $valueSelect.html(str);
     };
 
     var initNames = function() {
         var str = ''
         gdata.forEach(function(i) {
-            str += `<label><input type="checkbox" checked="checked" value="${i[chooseKey]}">${i[chooseKey]}</label>`
+            str += `<option value="${i[chooseKey]}">${i[chooseKey]}</option>`
         })
-        $nameSelect.innerHTML = str;
+        $nameSelect.html(str);
+        $nameSelect.select2({
+            placeholder:'请选择',
+            placeholderOption: "first",
+            allowClear: true,
+        });
     };
-   
-
 
     /**
      * 上传的文件
@@ -141,7 +156,7 @@ window.onload = function () {
      * 拖拽上传
      * https://developer.mozilla.org/zh-CN/docs/Web/Events/drop
      */
-    drop.addEventListener('drop', function (event) {
+    $drop.on('drop', function (event) {
         event.stopPropagation();
         event.preventDefault();
         var files = event.dataTransfer.files;
@@ -151,8 +166,8 @@ window.onload = function () {
                 gdata = data;
                 initFilter(data);
             });
-            drop.classList.remove('active');
-            drop.innerText = '把 Excel 文件拖动到这个区域！';
+            $drop.removeClass('active');
+            $drop.text('把 Excel 文件拖动到这个区域！');
         }
     }, false);
 
@@ -161,76 +176,48 @@ window.onload = function () {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'copy';
 
-        if (drop.classList.contains('active') === false) {
-            drop.classList.add('active');
-            drop.innerText = '松开吧！';
+        if (!$drop.hasClass('active')) {
+            $drop.addClass('active');
+            $drop.text('松开吧！');
         }
     }
 
-    drop.addEventListener('dragenter', dragover, false);
-    drop.addEventListener('dragover', dragover, false);
-    drop.addEventListener('dragleave', function (event) {
-        drop.classList.remove('active');
-        drop.innerText = '把 Excel 文件拖拽到这个区域里！';
+    $drop.on('dragenter', dragover, false);
+    $drop.on('dragover', dragover, false);
+    $drop.on('dragleave', function (event) {
+        drop.removeClass('active');
+        $drop.text('把 Excel 文件拖拽到这个区域里！');
     }, false);
 
-    $keySelect.addEventListener('change', function() {
-        chooseKey = $keySelect.value;
+    $keySelect.on('change', function() {
+        chooseKey = $keySelect.val();
         initNames();
     });
-    $valueSelect.addEventListener('change', function() {
-        chooseValue = $valueSelect.value;
+    $valueSelect.on('change', function() {
+        chooseValue = $valueSelect.val();
     });
 
-    $handleChart.addEventListener('click', function() {
+    $handleChart.on('click', function() {
         handleChart(gdata);
     });
 
-    // --------- export ---------//
-    // edit.value =
-    //     "根据表格内容生成 Excel 文件" + "\n\n" +
+    $nameSelect.on('change', function() {
+        products = $nameSelect.val();
+    });
 
-    //     "学校 | 姓名 | 学号" + "\n" +
-    //     "--- | --- | --- " + "\n" +
-    //     "电子神技大学 | 张三 | A-201701010211" + "\n" +
-    //     "电子神技大学 | 李四 | A-201701010212" + "\n" +
-    //     "电子神技大学 | 王五 | A-201701010213" + "\n" +
-    //     "";
-    // view.innerHTML = marked(edit.value);
-    // edit.onkeyup = function (event) {
-    //     view.innerHTML = marked(edit.value);
-    // }
+    $chartType.on('change', function() {
+        chartType = $chartType.val();
+        handleChart(gdata);
+    });
 
-    // // 把 string 转为 ArrayBuffer
-    // function s2ab(str) {
-    //     var buf = new ArrayBuffer(str.length);
-    //     var _view = new Uint8Array(buf);
-    //     for (var i = 0, len = str.length; i < len; i++) {
-    //         _view[i] = str.charCodeAt(i) & 0xFF;
-    //     }
-    //     return buf;
-    // }
+    // $('#choose-all').on('click', function() {
+    //     var options = selectElem.options;    // selectElem is the <select> element
+    //     for (var i = 0;  i < options.length;  i++)
+    //         options[i].selected = true;
 
-    // // 根据表格内容，生成 Excel 文件
-    // derive.onclick = function (event) {
-    //     var table = $('table', view);
-    //     var sheet = XLSX.utils.table_to_sheet(table);
+    //     // Inform Select2
+    //     select2Elem.trigger("change");
+    // })
 
-    //     sheet['A1'] = Object.assign(sheet['A1'], {
-    //         // 样式？
-    //         s: {
-    //             fill: {
-    //                 fgColor: { rgb: "FFFF0000" }
-    //             }
-    //         },
-    //     });
-
-    //     var wb = XLSX.utils.book_new({ cellStyles: true });
-    //     XLSX.utils.book_append_sheet(wb, sheet, "SheetJS");
-    //     // 渲染
-    //     var wbout = XLSX.write(wb, { type: "binary", bookType: "xlsx" });
-    //     // 保存 - https://github.com/eligrey/FileSaver.js
-    //     saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), Date.now() + ".xlsx");
-    // }
 }
 
