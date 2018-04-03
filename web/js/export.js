@@ -5,9 +5,11 @@ window.onload = function () {
     var $drop = $('#drop');
     var view = $('#view')[0];
     var $export = $('#export');
+    var $fileList = $('#file-list');
 
     var excelView = $('#excel-view')[0];
-    var gdata;
+    var gdata = [];
+    var fileList = [];
     var products = [];
     var cources = {
         '数学': /数学/,
@@ -57,6 +59,8 @@ window.onload = function () {
             // var ws = wb.Sheets[wsname];
             // 渲染
             typeof cb === 'function' && cb(wb);
+            $fileList.html(`<div class="file-item"><i class="excel"></i><span>${filedata.name}</span></div>`);
+            fileList.unshift(filedata.name);
         };
     }
 
@@ -93,7 +97,7 @@ window.onload = function () {
 
         if (files && files[0]) {
             render(files[0], 'toJson', function(data) {
-                gdata = data;
+                gdata.unshift(data);
             });
         }
     }
@@ -109,7 +113,7 @@ window.onload = function () {
 
         if (files && files[0]) {
             render(files[0], 'toJson', function(data) {
-                gdata = data;
+                gdata.unshift(data);
             });
             $drop.removeClass('active');
             $drop.text('把 Excel 文件拖动到这个区域！');
@@ -148,7 +152,7 @@ window.onload = function () {
 
     // 根据表格内容，生成 Excel 文件
     $export.on('click', function (event) {
-        var edata = JSON.parse(JSON.stringify(gdata));
+        var edata = JSON.parse(JSON.stringify(gdata[0]));
         edata.forEach(function(i) {
             var name = i['产品名称']
             if (name.match(/直通车/)) {
@@ -188,8 +192,9 @@ window.onload = function () {
         // 渲染
         var wbout = XLSX.write(wb, { type: "binary", bookType: "xlsx" });
         // 保存 - https://github.com/eligrey/FileSaver.js
-        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), Date.now() + ".xlsx");
-    })
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }),  fileList[0].replace(/\.\w+/, '') + "-new.xlsx");
+
+    });
 
 }
 

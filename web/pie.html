@@ -12,7 +12,7 @@
 </head>
 <body id="body">
     <header>
-        <div class="title">Excel处理工具</div>
+        <div class="brand">Excel处理工具</div>
         <ul>
             <li><a href="pie.html">比例图</a></li>
             <li><a href="export.html">数据导出</a></li>
@@ -31,6 +31,8 @@
                         accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         />
                 </form>
+                <div id="file-list"></div>
+                <p id="file-list">注：比例图只支持单张图表</p>
             </div>
 
             <div class="filter">
@@ -62,7 +64,6 @@
                 <select id="filter-name" name="states[]" multiple="multiple" style="height: 0px;"></select>
 
                 <button class="btn" style="margin: 20px auto;" id="handleChart">生成图表</button>
-                <button class="btn" style="margin: 20px auto;" id="export">导出EXCEL</button>
             </div>
 
         </section>

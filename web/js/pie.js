@@ -10,32 +10,16 @@ window.onload = function () {
     var $nameSelect = $('#filter-name');
     var $handleChart = $('#handleChart');
     var $chartType = $('#filter-charttype');
+    var $fileList = $('#file-list');
 
     var excelView = $('#excel-view')[0];
     var chart = echarts.init(excelView);
     var chooseKey;
     var chooseValue;
-    var gdata;
+    var gdata = [];
     var chartType = 'pie';
     var products = [];
-    // var cources = {
-    //     '数学': /数学/,
-    //     '英语': /英语/,
-    //     '政治': /政治/,
-    //     '翻译': /翻译/,
-    //     '经济': /经济/,
-    //     '金融': /金融/,
-    //     '计算机': /数学/,
-    //     '汉语': /汉语/,
-    //     '西医': /西医/,
-    //     '法律': /法律|法学/,
-    //     '法律': /法律/,
-    //     '心理': /心理/,
-    //     '艺术类': /音乐|美术|艺术/,
-    //     '管理': /管理/,
-    //     '会计': /会计/,
-    //     '日语': /日语/,
-    // }
+
 
 
     /**
@@ -49,6 +33,7 @@ window.onload = function () {
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ];
+
 
         if (types.indexOf(filedata.type) === -1) {
             return alert('文件类型不是 Excel 格式');
@@ -66,6 +51,7 @@ window.onload = function () {
             // var ws = wb.Sheets[wsname];
             // 渲染
             typeof cb === 'function' && cb(wb);
+            $fileList.html(`<div class="file-item"><i class="excel"></i><span>${filedata.name}</span></div>`);
         };
     }
 
@@ -145,7 +131,7 @@ window.onload = function () {
 
     var initNames = function() {
         var str = ''
-        gdata.forEach(function(i) {
+        gdata[0].forEach(function(i) {
             str += `<option value="${i[chooseKey]}">${i[chooseKey]}</option>`
         })
         $nameSelect.html(str);
@@ -164,8 +150,8 @@ window.onload = function () {
 
         if (files && files[0]) {
             render(files[0], 'toJson', function(data) {
-                gdata = data;
-                initFilter(data);
+                gdata.unshift(data);
+                initFilter(gdata[0]);
             });
         }
     }
@@ -181,8 +167,8 @@ window.onload = function () {
 
         if (files && files[0]) {
             render(files[0], 'toJson', function(data) {
-                gdata = data;
-                initFilter(data);
+                gdata.unshift(data);
+                initFilter(gdata[0]);
             });
             $drop.removeClass('active');
             $drop.text('把 Excel 文件拖动到这个区域！');
@@ -216,7 +202,7 @@ window.onload = function () {
     });
 
     $handleChart.on('click', function() {
-        handleChart(gdata);
+        handleChart(gdata[0]);
     });
 
     $nameSelect.on('change', function() {
@@ -225,65 +211,8 @@ window.onload = function () {
 
     $chartType.on('change', function() {
         chartType = $chartType.val();
-        handleChart(gdata);
+        handleChart(gdata[0]);
     });
-
-    // // --------- export ---------//
-
-    // // 把 string 转为 ArrayBuffer
-    // function s2ab(str) {
-    //     var buf = new ArrayBuffer(str.length);
-    //     var _view = new Uint8Array(buf);
-    //     for (var i = 0, len = str.length; i < len; i++) {
-    //         _view[i] = str.charCodeAt(i) & 0xFF;
-    //     }
-    //     return buf;
-    // }
-
-    // // 根据表格内容，生成 Excel 文件
-    // $export.on('click', function (event) {
-    //     var edata = JSON.parse(JSON.stringify(gdata));
-    //     edata.forEach(function(i) {
-    //         var name = i['产品名称']
-    //         if (name.match(/直通车/)) {
-    //             i['产品类型'] = '直通车';
-    //         }
-    //         else if (name.match(/全程班/)) {
-    //             i['产品类型'] = '全程班';
-    //         }
-    //         else {
-    //             i['产品类型'] = '其他';
-    //         }
-
-    //         for (item in cources) {
-    //             if (name.match(cources[item])) {
-    //                 i['学科'] = item;
-    //                 break;
-    //             }
-    //             else {
-    //                 i['学科'] = '';
-    //             }
-    //         }
-    //     })
-    //     console.log(edata);
-    //     var sheet = XLSX.utils.json_to_sheet(edata);
-
-    //     sheet['A1'] = Object.assign(sheet['A1'], {
-    //         // 样式？
-    //         s: {
-    //             fill: {
-    //                 fgColor: { rgb: "FFFF0000" }
-    //             }
-    //         },
-    //     });
-
-    //     var wb = XLSX.utils.book_new({ cellStyles: true });
-    //     XLSX.utils.book_append_sheet(wb, sheet, "SheetJS");
-    //     // 渲染
-    //     var wbout = XLSX.write(wb, { type: "binary", bookType: "xlsx" });
-    //     // 保存 - https://github.com/eligrey/FileSaver.js
-    //     saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), Date.now() + ".xlsx");
-    // })
 
 }
 
