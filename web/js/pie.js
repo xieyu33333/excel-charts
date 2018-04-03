@@ -163,7 +163,7 @@ window.onload = function () {
     $drop.on('drop', function (event) {
         event.stopPropagation();
         event.preventDefault();
-        var files = event.dataTransfer.files;
+        var files = event.originalEvent.dataTransfer.files;
 
         if (files && files[0]) {
             render(files[0], 'toJson', function(data) {
@@ -173,12 +173,12 @@ window.onload = function () {
             $drop.removeClass('active');
             $drop.text('把 Excel 文件拖动到这个区域！');
         }
-    }, false);
+    });
 
     function dragover(event) {
         event.stopPropagation();
         event.preventDefault();
-        event.dataTransfer.dropEffect = 'copy';
+        event.originalEvent.dataTransfer.dropEffect = 'copy';
 
         if (!$drop.hasClass('active')) {
             $drop.addClass('active');
@@ -186,12 +186,12 @@ window.onload = function () {
         }
     }
 
-    $drop.on('dragenter', dragover, false);
-    $drop.on('dragover', dragover, false);
+    $drop.on('dragenter', dragover);
+    $drop.on('dragover', dragover);
     $drop.on('dragleave', function (event) {
         $drop.removeClass('active');
         $drop.text('把 Excel 文件拖拽到这个区域里！');
-    }, false);
+    });
 
     $keySelect.on('change', function() {
         chooseKey = $keySelect.val();
