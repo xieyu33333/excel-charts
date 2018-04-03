@@ -132,6 +132,20 @@ section .title {
 	margin-top: 5px;
 }
 
+.file-item span {
+	font-size: 13px;
+	font-weight: normal;
+}
+
+.excel {
+	display: block;
+    height: 34px;
+    width: 34px;
+    background: url(../imgs/excel-big.png);
+    background-size: contain;
+    margin: auto;
+}
+
 #drop {
 	margin: 0 auto;
 	border: 2px dashed #fff;
@@ -173,25 +187,10 @@ section .title {
 	background-color: #f7f7f7;
 	font-size: 14px;
 	height: 800px;
-	overflow-x: auto
+	overflow: auto;
+	padding: 20px;
 }
 
-#excel-view td {
-	min-width: 80px;
-	height: 20px;
-	padding: 3px
-}
-
-#excel-view tr:nth-of-type(even) {
-	background-color: #eee
-}
-
-#excel-view tr:first-of-type {
-	font-weight: bold;
-	-webkit-box-shadow: 2px 4px 16px rgba(1,1,1,0.18);
-	box-shadow: 2px 4px 16px rgba(1,1,1,0.18);
-	margin: 0 0 3px
-}
 
 /*#derive {
 	border: none;
